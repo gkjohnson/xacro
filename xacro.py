@@ -37,28 +37,6 @@
 # the package direcory is the share directory. going forward, we should
 # transition to scripts/xacro
 
-from __future__ import print_function
-
-# Guard against self import
-import os
-import sys
-backup_path = list(sys.path)
-this_dir = os.path.dirname(__file__)
-# Use os.getcwd() to avoid weird symbolic link problems
-cur_dir = os.getcwd()
-os.chdir(this_dir)
-this_dir_cwd = os.getcwd()
-os.chdir(cur_dir)
-# Remove this dir from path
-sys.path = [a for a in sys.path if a not in [this_dir, this_dir_cwd]]
-
 import xacro
-from xacro.color import warning
-
-# Restore the path
-sys.path = backup_path
 
 xacro.main()
-
-# issue deprecation warning
-warning('xacro.py is deprecated; please use xacro instead')

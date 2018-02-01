@@ -38,6 +38,7 @@ import re
 import sys
 import ast
 import math
+import substitution_args
 
 from copy import deepcopy
 from .color import warning, error, message
@@ -179,8 +180,6 @@ def eval_extension(s):
     if s == '$(cwd)':
         return os.getcwd()
     try:
-        from roslaunch import substitution_args
-        from rospkg.common import ResourceNotFound
         return substitution_args.resolve_args(s, context=substitution_args_context, resolve_anon=False)
     except ImportError as e:
         raise XacroException("substitution args not supported: ", exc=e)
@@ -1029,6 +1028,9 @@ def main():
         warning("xacro: Traditional processing is deprecated. Switch to --inorder processing!")
         message("To check for compatibility of your document, use option --check-order.", color='yellow')
         message("For more infos, see http://wiki.ros.org/xacro#Processing_Order", color='yellow')
+
+    input_file_name = os.path.normpath(os.path.join(os.getcwd(), input_file_name))
+    substitution_args_context["file"] = input_file_name
 
     try:
         # open and process file
