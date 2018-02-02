@@ -84,7 +84,15 @@ def abs_filename_spec(filename_spec):
     if not os.path.isabs(filename_spec):
         parent_filename = filestack[-1]
         basedir = os.path.dirname(parent_filename) if parent_filename else '.'
-        return os.path.join(basedir, filename_spec)
+        curr = os.path.join(basedir, filename_spec)
+        while not os.path.exists(curr):
+            basedir = os.path.abspath(os.path.join(basedir, '..'))
+            newpath = os.path.join(basedir, filename_spec)
+            if newpath == curr:
+                break;
+            curr = newpath
+
+        return curr
     return filename_spec
 
 
